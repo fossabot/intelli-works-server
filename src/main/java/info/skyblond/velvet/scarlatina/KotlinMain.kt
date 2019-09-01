@@ -66,7 +66,9 @@ object KotlinMain{
         //fetch a student
         app.post(ParameterOP.parameter.fetchStudentBySno, info.skyblond.velvet.scarlatina.handler.Student::fetchStudentBySno)
         app.get(ParameterOP.parameter.fetchRecordWithToken, info.skyblond.velvet.scarlatina.handler.Student::fetchRecordWithToken)
-
+        
+        //for test only
+        app.get("/*") { ctx -> ctx.result(ctx.path()) }
     }
 
     fun generateCode(uid: String): String{
