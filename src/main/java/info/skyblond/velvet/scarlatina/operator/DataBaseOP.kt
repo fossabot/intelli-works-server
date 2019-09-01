@@ -16,6 +16,9 @@ import org.ehcache.config.units.MemoryUnit
 import org.mariadb.jdbc.MariaDbDataSource
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
 import java.sql.SQLException
 import java.time.Duration
 import java.util.concurrent.Executors
@@ -587,6 +590,63 @@ object DataBaseOP {
         } catch (e: Exception) {
             logger.error(e.toString())
             0
+        }
+    }
+
+    fun pinyin(){
+        val jdbcTemplate = JdbcTemplate()
+        val dataSource = MariaDbDataSource(PropertiesOP.dbHost, PropertiesOP.dbPort, PropertiesOP.dbName)
+        try {
+            dataSource.user = PropertiesOP.dbUser
+            dataSource.setPassword(PropertiesOP.dbPass)
+        } catch (e: SQLException) {
+            throw RuntimeException(e)
+        }
+        jdbcTemplate.dataSource = dataSource
+
+        val pinyin = HashMap<String, String>()
+
+        val file = File("./pinyin.db")
+        if(file.exists()){
+            try {
+                val br = BufferedReader(FileReader(file))
+                br.readLines().forEach {
+                    val t = it.split("=")
+                    pinyin[t[0]] = t[1]
+                }
+                br.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }else{
+            println("No pinyin lib found.")
+            return
+        }
+
+        try {
+            jdbcTemplate.query("SELECT * FROM tt;"){
+                val name = it.getString("name")
+                if(name.isNotBlank()){
+                    val sno = it.getString("sno")
+                    val sb = StringBuilder()
+                    for(i in name){
+                        if(i != '·') {
+                            if(pinyin[i.toString()] != null)
+                                sb.append(pinyin[i.toString()])
+                            else{
+                                println("Error!!! $sno $name @ $i")
+                                return@query
+                            }
+                        }
+                    }
+                    println("$sno $name $sb")
+                    jdbcTemplate.update("UPDATE tt SET pinyin = ? WHERE sno = ?;", sb.toString(), sno)
+                }else{
+                    return@query
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
