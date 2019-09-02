@@ -1,6 +1,6 @@
-import info.skyblond.velvet.scarlatina.KotlinMain;
-import info.skyblond.velvet.scarlatina.models.message.Teacher;
-import info.skyblond.velvet.scarlatina.operator.DataBaseOP;
+import com.github.ncutsist.intelli.works.server.KotlinMain;
+import com.github.ncutsist.intelli.works.server.models.message.Teacher;
+import com.github.ncutsist.intelli.works.server.operator.DataBaseOP;
 
 import java.util.Scanner;
 
