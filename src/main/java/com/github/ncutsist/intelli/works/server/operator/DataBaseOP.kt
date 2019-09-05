@@ -584,7 +584,7 @@ object DataBaseOP {
     }
 
     fun fetUnreadByUid(uid: String): Int {
-        val query = "SELECT COUNT(*) FROM messages WHERE uid = ? LIMIT $LIMIT;"
+        val query = "SELECT COUNT(*) FROM messages WHERE uid = ?;"
         return try {
             jdbcTemplate.queryForObject(query, Int::class.java, uid)
         } catch (e: Exception) {

@@ -2,7 +2,7 @@ package com.github.ncutsist.intelli.works.server.handler
 
 import com.google.gson.Gson
 import com.github.ncutsist.intelli.works.server.models.message.SubmitRequest
-import com.github.ncutsist.intelli.works.server.models.message.TeacherTokenRespond
+import com.github.ncutsist.intelli.works.server.models.message.MessageTokenRespond
 import com.github.ncutsist.intelli.works.server.models.message.TicketInfo
 import com.github.ncutsist.intelli.works.server.operator.DataBaseOP
 import com.github.ncutsist.intelli.works.server.operator.TokenOP
@@ -64,7 +64,7 @@ object Message {
         ctx.contentType("application/json;charset=utf-8")
         //a standard token should be 12(uid) + 32(token) chars long
         if (ctx.body().length != 44) {
-            ctx.result(gson.toJson(TeacherTokenRespond.getFailed()))
+            ctx.result(gson.toJson(MessageTokenRespond.getFailed()))
             return
         }
         //separate things
@@ -74,7 +74,7 @@ object Message {
         //try to get teacher
         val teacher = DataBaseOP.fetchTeacherByUid(uid)
         if (teacher == null) {//if uid is correct, teacher shouldn't be null
-            ctx.result(gson.toJson(TeacherTokenRespond.getFailed()))
+            ctx.result(gson.toJson(MessageTokenRespond.getFailed()))
             return
         }
 
@@ -86,14 +86,14 @@ object Message {
             //otherwise the page will redirect to expired link page
             val ticket = TokenOP.generateTicket()
             if (ticket == null) {
-                ctx.result(gson.toJson(TeacherTokenRespond.getFailed()))
+                ctx.result(gson.toJson(MessageTokenRespond.getFailed()))
                 return
             }
             //recode ticket, a ticket has a 10 minutes validate time
             tickets[ticket] = TicketInfo(teacher)
-            ctx.result(gson.toJson(TeacherTokenRespond.getSuccess(teacher.name, ticket)))
+            ctx.result(gson.toJson(MessageTokenRespond.getSuccess(teacher.name, ticket)))
         } else {//token is invalidated
-            ctx.result(gson.toJson(TeacherTokenRespond.getFailed()))
+            ctx.result(gson.toJson(MessageTokenRespond.getFailed()))
         }
     }
 
