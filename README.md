@@ -103,7 +103,7 @@ token验证通过将返回所查询学生的列表，失败或查不到学生则
     "nation_help": "", 
     "gpa": "",
     "political": "",
-    "phone": "15901441579",
+    "phone": "159XXXX1579",
     "parent_phone": "13700000000",
     "dorm": "7",
     "dorm_num": "303",
