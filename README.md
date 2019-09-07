@@ -242,8 +242,8 @@ POST请求内容：
 ```json
 {
     "id": 18101130109,
-    "name": "胡睿";
-    "ticket": "MTIzNDU2Nzg5MDEyMzQ1Njc4";
+    "name": "胡睿",
+    "ticket": "MTIzNDU2Nzg5MDEyMzQ1Njc4",
     "level": "normal",
     "message": "消息内容"
 }
